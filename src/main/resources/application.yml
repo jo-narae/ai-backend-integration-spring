@@ -44,7 +44,7 @@ springdoc:
 logging:
   level:
     root: INFO
-    com.frentis.aibackend: DEBUG
+    com.sesac.aibackend: DEBUG
     org.hibernate.SQL: DEBUG
 
 ---

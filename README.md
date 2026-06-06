@@ -111,7 +111,7 @@ curl http://localhost:8080/admin/users \
 ## 디렉터리 구조
 
 ```
-src/main/java/com/frentis/aibackend/
+src/main/java/com/sesac/aibackend/
 ├── AiBackendApplication.java   진입점
 ├── domain/                     User, ChatLog, Item (Day 3)
 ├── repository/                 JpaRepository 3개
@@ -140,7 +140,7 @@ src/main/java/com/frentis/aibackend/
 ├── config/
 │   ├── WebClientConfig         Day 5
 │   ├── CorsConfig              Day 5 (헤더 화이트리스트 명시)
-│   ├── SwaggerConfig           Day 5 (라우트별 보안 요구)
+│   ├── SwaggerConfig           Day 4 SP-14 (Bearer 스킴 → Authorize). springdoc 의존성은 Day 2부터. 라우트별 @SecurityRequirement는 Day 5
 │   └── DataInitializer         ★ 추가 (dev 프로파일 시드)
 └── error/
     ├── GlobalExceptionHandler  400/401/403/404/409/500 매핑
@@ -158,10 +158,10 @@ src/main/java/com/frentis/aibackend/
 | Day 3 B1~B4 | JDBC→JPA + PostgreSQL + 엔티티 + JpaRepository | `domain/*`, `repository/*`, `application.yml` |
 | Day 3 B5~B7 | 연관관계 + ChatLog 도메인 + 인메모리→JPA 교체 | `User`, `ChatLog`, `ChatLogService`, `controller/ItemController` (`/items`) |
 | Day 4 B1~B4 | Security 6 + UserDetailsService + JWT 발급 | `security/SecurityConfig`, `security/JwtUtil`, `AuthController` |
-| Day 4 B5~B6 | JWT 검증 필터 + 역할 권한 | `security/JwtAuthenticationFilter`, `AdminController` |
+| Day 4 B5~B6 | JWT 검증 필터 + 역할 권한 + Swagger Authorize(Bearer 스킴) | `security/JwtAuthenticationFilter`, `AdminController`, `config/SwaggerConfig` |
 | Day 4 B7~B8 | 구글 OAuth2 Client 구성 + 성공 핸들러로 앱 JWT 발급 | `application.yml`(oauth2 client), `security/SecurityConfig`(oauth2Login), `security/OAuth2LoginSuccessHandler` |
 | Day 5 B1~B3 | WebClient + /chat 프록시 + ChatLog 저장 | `config/WebClientConfig`, `service/PythonChatClient`, `controller/ChatController`, `service/ChatLogService` |
-| Day 5 B4~B7 | CORS + Swagger + 환경변수 + React 시연 | `config/CorsConfig`, `config/SwaggerConfig`, `dto/ChatLogResponse` (이력 화면) |
+| Day 5 B4~B7 | CORS + Swagger 라우트별 자물쇠(@SecurityRequirement) + 환경변수 + React 시연 | `config/CorsConfig`, 세 컨트롤러(@SecurityRequirement), `dto/ChatLogResponse` (이력 화면) |
 
 ## 강사 진행 가이드
 
@@ -239,6 +239,16 @@ src/main/java/com/frentis/aibackend/
 ```
 
 `AiBackendApplicationTests`는 컨텍스트 로드만 검증합니다.
+
+### API 수동 테스트 (curl과 Swagger)
+
+springdoc 자동 문서는 **Day 2부터** 동작하므로, 굳이 Postman/Insomnia를 설치하지 않아도 됩니다.
+
+- **curl**: 원리 확인용. 위 예시처럼 주소·헤더·본문을 직접 적습니다.
+- **Swagger UI** (`/swagger-ui.html`): 브라우저에서 값을 채워 **Try it out**으로 호출. `@RequestBody`가 있는 POST는 따옴표 이스케이프 없이 편합니다.
+- **JWT 보호 라우트**: **Day 4(SP-14)**에서 `SwaggerConfig`(Bearer 스킴)를 등록하면 우상단 **Authorize** 버튼이 생깁니다. `/login`으로 받은 토큰을 붙이면 이후 호출에 `Authorization: Bearer`가 자동 부착됩니다.
+
+> 교육 흐름 권장: 토큰을 헤더에 싣는 원리는 curl로 한 번만 보여 주고, 반복 호출은 Swagger Authorize로 전환합니다.
 
 ## 트러블슈팅
 
