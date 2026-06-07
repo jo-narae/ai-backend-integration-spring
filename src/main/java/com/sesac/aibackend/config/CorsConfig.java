@@ -8,9 +8,11 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * CORS 설정 (Day 5).
+ * CORS 설정 (Day 4 · React 인증 셸 B6).
  *
  * React 개발 서버(Vite 기본 포트 5173)의 호출을 허용합니다.
+ * Day4 React 인증 셸을 띄워 로그인하면 교차 출처(5173→8080)로 막히므로,
+ * 그 지점에서 이 빈을 만들고 보안 필터 체인(SecurityConfig)의 .cors(...)와 짝으로 켭니다.
  *
  * 보안 주의:
  * - allowCredentials=true 와 함께 allowedHeaders="*" 사용은 비권장입니다.
